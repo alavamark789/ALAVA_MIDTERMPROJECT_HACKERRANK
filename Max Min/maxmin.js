@@ -1,0 +1,48 @@
+'use strict';
+
+const fs = require('fs');
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', function(inputStdin) {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function() {
+    inputString = inputString.split('\n');
+    main();
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
+
+function maxMin(k, arr) {
+    arr.sort((a, b) => a - b);
+    let minUnfairness = Infinity;
+    for (let i = 0; i <= arr.length - k; i++) {
+        const unfairness = arr[i + k - 1] - arr[i];
+        if (unfairness < minUnfairness) minUnfairness = unfairness;
+    }
+    return minUnfairness;
+}
+
+function main() {
+    const ws = fs.createWriteStream(process.env.OUTPUT_PATH || '/dev/stdout');
+
+    const n = parseInt(readLine().trim(), 10);
+    const k = parseInt(readLine().trim(), 10);
+
+    let arr = [];
+    for (let i = 0; i < n; i++) {
+        arr.push(parseInt(readLine().trim(), 10));
+    }
+
+    const result = maxMin(k, arr);
+    ws.write(result + '\n');
+    ws.end();
+}
